@@ -26,9 +26,6 @@ jobs:
             chmod +x ./.deploy/commands/*.sh
             chmod +x ./.circleci/*.sh
       - run:
-          name: Check Rejected Commits
-          command: ./.circleci/check_rejected_commits.sh
-      - run:
           name: Set DB URL
           command: echo 'export DATABASE_URL=${DB_DRIVER}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}' >> $BASH_ENV
       - run:
