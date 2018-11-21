@@ -1,0 +1,77 @@
+version: 1
+notify:
+  webhooks:
+    - url: https://production-review-tool.herokuapp.com/api/buildNotification
+jobs:
+  build:
+    working_directory: ~/project
+    docker:
+      - image: circleci/php:7.2
+      - image: circleci/postgres:10
+    environment:
+      - APP_ENV: testing
+      - CACHE_DRIVER: file
+      - DB_DRIVER: postgres
+      - DB_USER: postgres
+      - DB_PASS: postgres
+      - DB_HOST: localhost
+      - DB_PORT: 5432
+      - DB_NAME: postgres
+      - APP_KEY: base64:KRD86KRvFphTlE6ykYWtOhQLlOcvWYimIkjz3qRO1/A=
+    steps:
+      - checkout
+      - run:
+          name: Scripts preparation
+          command: |
+            chmod +x ./.deploy/commands/*.sh
+            chmod +x ./.circleci/*.sh
+      - run:
+          name: Check Rejected Commits
+          command: ./.circleci/check_rejected_commits.sh
+      - run:
+          name: Set DB URL
+          command: echo 'export DATABASE_URL=${DB_DRIVER}://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}' >> $BASH_ENV
+      - run:
+          name: Install System Dependencies
+          command: |
+            sudo apt install -y libpq-dev
+            sudo apt install -y libpng-dev
+            sudo apt install -y libxml2-dev
+            sudo docker-php-ext-install pdo pdo_pgsql gd zip xml
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
+      - run:
+          name: Composer Install
+          command: composer install -n --prefer-dist
+      - save_cache:
+          key: composer-v1-{{ checksum "composer.lock" }}
+          paths:
+            - vendor
+      - run:
+          name: Migrate DB
+          command: php artisan migrate
+      - run:
+          name: Security check
+          command: ./.deploy/commands/security_checker.sh
+      - run:
+          name: PHP Lint
+          command: ./.deploy/commands/parallel_lint.sh
+      - run:
+          name: Unit Tests
+          command: ./.deploy/commands/phpunit.sh
+      - run:
+          name: PHP CodeSniffer
+          command: ./.deploy/commands/phpcs.sh
+      - run:
+          name: PHP Mess Detector
+          command: ./.deploy/commands/phpmd.sh
+      - run:
+          name: Java + Graphiviz Installation & Schema Crawler
+          command: ./.circleci/schemacrawler.sh
+      - store_artifacts:
+          path: /tmp/db-schema.png
+      - run:
+          name: Heroku Deploy
+          command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git HEAD:refs/heads/master
