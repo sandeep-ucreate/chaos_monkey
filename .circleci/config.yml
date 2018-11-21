@@ -34,7 +34,7 @@ jobs:
             sudo apt install -y libpq-dev
             sudo apt install -y libpng-dev
             sudo apt install -y libxml2-dev
-            sudo docker-php-ext-install pdo pdo_pgsql gd zip xml
+            sudo docker-php-ext-install pdo pdo_pgsql gd zip xml bcmath
       - restore_cache:
           keys:
             - composer-v1-{{ checksum "composer.lock" }}
