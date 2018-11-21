@@ -4,7 +4,7 @@ notify:
     - url: https://production-review-tool.herokuapp.com/api/buildNotification
 jobs:
   build:
-    working_directory: ~/project
+    working_directory: ~/chaos_monkey
     docker:
       - image: circleci/php:7.2
       - image: circleci/postgres:10
@@ -58,9 +58,6 @@ jobs:
       - run:
           name: PHP Lint
           command: ./.deploy/commands/parallel_lint.sh
-      - run:
-          name: Unit Tests
-          command: ./.deploy/commands/phpunit.sh
       - run:
           name: PHP CodeSniffer
           command: ./.deploy/commands/phpcs.sh
