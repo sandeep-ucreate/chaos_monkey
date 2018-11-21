@@ -1,5 +1,6 @@
 <?php
 
+
 $config = [];
 
 $db_url = env("DATABASE_URL", null);
