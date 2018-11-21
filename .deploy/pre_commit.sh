@@ -11,9 +11,6 @@ chmod +x ./.deploy/commands/*.sh
 # PHP Lint
 ./.deploy/commands/parallel_lint.sh || EXIT_CODE=1
 
-# PHPUnit
-./.deploy/commands/phpunit.sh || EXIT_CODE=1
-
 # PHP CodeSniffer
 ./.deploy/commands/phpcs.sh || EXIT_CODE=1
 
