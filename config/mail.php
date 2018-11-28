@@ -15,6 +15,11 @@ return [
     |            "sparkpost", "log", "array"
     |
     */
+    'username' => env('POSTMARK_API_TOKEN'),
+    'password' => env('POSTMARK_API_TOKEN'),
+    
+    
+    // Optionally, set "smtp" to "log" if you want to trap emails during testing.
 
     'driver' => env('MAIL_DRIVER', 'smtp'),
 
