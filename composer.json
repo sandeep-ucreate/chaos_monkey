@@ -17,14 +17,15 @@
         "doctrine/dbal": "^2.8",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3",
+        "jenssegers/rollbar": "^1.5",
         "laravel/framework": "5.7.*",
         "laravel/telescope": "^1.0",
         "laravel/tinker": "^1.0",
         "maatwebsite/excel": "^3.1",
         "moontoast/math": "^1.1",
         "pusher/pusher-php-server": "~3.0",
-        "jenssegers/rollbar": "^1.5",
-        "tonyhhyip/laravel-sse": "~1.0"
+        "tonyhhyip/laravel-sse": "~1.0",
+        "writingink/wink": "^0.0.12"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.5",
